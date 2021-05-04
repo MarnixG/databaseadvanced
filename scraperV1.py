@@ -3,6 +3,10 @@ from bs4 import BeautifulSoup
 import pprint
 import sched
 import time
+import  pymongo  as mongo
+client = mongo.MongoClient("mongodb://127.0.0.1:27017")
+bitcoin_db = client["bitcoin"]
+col_waardes = local_database["waardes"]
 
 s = sched.scheduler(time.time, time.sleep)
 def bitscraper(sc): 
@@ -56,6 +60,9 @@ def bitscraper(sc):
             text = "Hash: " + key + " Time: " + time[0] + " BTC value: " + str(value) + " USD value: " +  dictionusd[key]
             scrapervalue.write(text)
             scrapervalue.write("\n")
+            hogewaarde = [{"Hash": key , "Time": time[0], "BTC value": str(value), "USD value": dictionusd[key]}]
+            x = col_waardes.insert_one(hogewaarde)
+            print(x.inserted_id)
     s.enter(60, 1, bitscraper, (sc,))
 
 s.enter(60, 1, bitscraper, (s,))

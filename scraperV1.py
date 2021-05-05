@@ -4,13 +4,14 @@ import pprint
 import sched
 import time
 import  pymongo  as mongo
+import redis
 
 
-client = mongo.MongoClient("mongodb://127.0.0.1:27017")
-bitcoin_db = client["local"]
-col_waardes = bitcoin_db["waardes"]
+#client = mongo.MongoClient("mongodb://127.0.0.1:27017")
+#bitcoin_db = client["local"]
+#col_waardes = bitcoin_db["waardes"]
 
-
+r = redis.Redis ()
 
 s = sched.scheduler(time.time, time.sleep)
 def bitscraper(sc): 
@@ -64,8 +65,10 @@ def bitscraper(sc):
             #text = "Hash: " + key + " Time: " + time[0] + " BTC value: " + str(value) + " USD value: " +  dictionusd[key]
             #scrapervalue.write(text)
             #scrapervalue.write("\n")
-            hogewaarde = {"Hash": key , "Time": time[0], "BTC value": str(value), "USD value": dictionusd[key]}
-            x = bitcoin_db.col_waardes.insert_one(hogewaarde)
+            #hogewaarde = {"Hash": key , "Time": time[0], "BTC value": str(value), "USD value": dictionusd[key]}
+            
+            r.mset = ({"Hash": key , "Time": time[0], "BTC value": str(value), "USD value": dictionusd[key]})
+            #x = bitcoin_db.col_waardes.insert_one(hogewaarde)
             #print(x)
     s.enter(60, 1, bitscraper, (sc,))
 

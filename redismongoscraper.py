@@ -70,7 +70,7 @@ def bitscraper(sc):
     
     dframe = pd.DataFrame(waardeverzameling, columns=["Hash", "Time", "BTC", "USD"])
 
-
+    dframe = dframe.to_json()
 
     btc.sort(reverse=True)
     usd.sort(reverse=True)
